@@ -52,8 +52,8 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 // ===================== TOAST =====================
 function toast(msg, type = 'success') {
   const el = document.createElement('div');
-  el.className = toast ${type};
-  el.innerHTML = <span>${type === 'success' ? '✅' : '❌'}</span> ${msg};
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
   document.getElementById('toastContainer').appendChild(el);
   setTimeout(() => el.remove(), 3000);
 }
@@ -212,7 +212,7 @@ function saveCustomer() {
         state: getVal('c-state'),
         pin: getVal('c-pin')
       };
-      addActivity(Customer "${name}" updated);
+      addActivity(`Customer "${name}" updated`);
       toast('Customer updated!');
     }
   } else {
@@ -227,7 +227,7 @@ function saveCustomer() {
       pin: getVal('c-pin')
     };
     state.customers.push(customer);
-    addActivity(Customer "${name}" added);
+    addActivity(`Customer "${name}" added`);
     toast('Customer added!');
   }
   save();
@@ -238,9 +238,9 @@ function saveCustomer() {
 function deleteCustomer(id) {
   const c = state.customers.find(x => x.id === id);
   if (!c) return;
-  if (!confirm(Delete customer "${c.name}"? This won't delete their invoices.)) return;
+  if (!confirm(`Delete customer "${c.name}"? This won't delete their invoices.`)) return;
   state.customers = state.customers.filter(x => x.id !== id);
-  addActivity(Customer "${c.name}" deleted);
+  addActivity(`Customer "${c.name}" deleted`);
   save();
   renderAll();
   toast('Customer deleted');
@@ -316,7 +316,7 @@ function saveProduct() {
         unit: getVal('p-unit'),
         desc: getVal('p-desc')
       };
-      addActivity(Product "${name}" updated);
+      addActivity(`Product "${name}" updated`);
       toast('Product updated!');
     }
   } else {
@@ -329,7 +329,7 @@ function saveProduct() {
       desc: getVal('p-desc')
     };
     state.products.push(product);
-    addActivity(Product "${name}" added);
+    addActivity(`Product "${name}" added`);
     toast('Product added!');
   }
   save();
@@ -343,9 +343,9 @@ function saveProduct() {
 function deleteProduct(id) {
   const p = state.products.find(x => x.id === id);
   if (!p) return;
-  if (!confirm(Delete product "${p.name}"?)) return;
+  if (!confirm(`Delete product "${p.name}"?`)) return;
   state.products = state.products.filter(x => x.id !== id);
-  addActivity(Product "${p.name}" deleted);
+  addActivity(`Product "${p.name}" deleted`);
   save();
   renderAll();
   toast('Product deleted');
@@ -439,7 +439,7 @@ function populateProductPicker() {
   state.products.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id;
-    opt.textContent = ${p.name} — ${fmtCurrency(p.price)};
+    opt.textContent = `${p.name} — ${fmtCurrency(p.price)}`;
     sel.appendChild(opt);
   });
 }
@@ -481,7 +481,7 @@ function removeLineItem(idx) {
 function renderLineItems() {
   const tbody = document.getElementById('line-items-body');
   if (lineItems.length === 0) {
-    tbody.innerHTML = <tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px;font-size:0.82rem;">No items added yet. Use the product picker or add a custom line.</td></tr>;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px;font-size:0.82rem;">No items added yet. Use the product picker or add a custom line.</td></tr>`;
     return;
   }
   tbody.innerHTML = lineItems.map((item, i) => {
@@ -495,7 +495,7 @@ function renderLineItems() {
         <td><input type="number" value="${item.rate}" min="0" step="0.01" oninput="updateLineItem(${i},'rate',this.value)"></td>
         <td>
           <select onchange="updateLineItem(${i},'gst',this.value)">
-            ${[0,5,12,18,28].map(g => <option value="${g}" ${parseInt(item.gst) === g ? 'selected' : ''}>${g}%</option>).join('')}
+            ${[0,5,12,18,28].map(g => `<option value="${g}" ${parseInt(item.gst) === g ? 'selected' : ''}>${g}%</option>`).join('')}
           </select>
         </td>
         <td style="color:var(--text);font-weight:600;">${fmtCurrency(total)}</td>
@@ -584,7 +584,7 @@ function saveInvoice() {
         subtotal, gstTotal, discount, grand,
         updatedAt: new Date().toISOString()
       };
-      addActivity(Invoice #${getVal('inv-number')} updated);
+      addActivity(`Invoice #${getVal('inv-number')} updated`);
       toast('Invoice updated!');
     }
   } else {
@@ -605,7 +605,7 @@ function saveInvoice() {
     };
     state.invoices.push(invoice);
     state.nextInvNum = (state.nextInvNum || 1) + 1;
-    addActivity(Invoice #${invNumber} created for ${customer ? customer.name : 'customer'});
+    addActivity(`Invoice #${invNumber} created for ${customer ? customer.name : 'customer'}`);
     toast('Invoice created!');
   }
 
@@ -651,7 +651,7 @@ function renderInvoices(filter = '') {
           <button class="btn btn-ghost btn-sm" onclick="previewInvoice('${inv.id}')">👁️</button>
           <button class="btn btn-ghost btn-sm" onclick="editInvoice('${inv.id}')">✏️</button>
           <button class="btn btn-danger btn-sm" onclick="deleteInvoice('${inv.id}')">🗑️</button>
-          ${inv.status !== 'Paid' ? <button class="btn btn-success btn-sm" onclick="markPaid('${inv.id}')">✅ Paid</button> : ''}
+          ${inv.status !== 'Paid' ? `<button class="btn btn-success btn-sm" onclick="markPaid('${inv.id}')">✅ Paid</button>` : ''}
         </div>
       </td>
     </tr>
@@ -668,9 +668,9 @@ function getCustomerName(id) {
 function deleteInvoice(id) {
   const inv = state.invoices.find(x => x.id === id);
   if (!inv) return;
-  if (!confirm(Delete invoice ${inv.number}?)) return;
+  if (!confirm(`Delete invoice ${inv.number}?`)) return;
   state.invoices = state.invoices.filter(x => x.id !== id);
-  addActivity(Invoice #${inv.number} deleted);
+  addActivity(`Invoice #${inv.number} deleted`);
   save();
   renderAll();
   toast('Invoice deleted');
@@ -680,7 +680,7 @@ function markPaid(id) {
   const idx = state.invoices.findIndex(x => x.id === id);
   if (idx === -1) return;
   state.invoices[idx].status = 'Paid';
-  addActivity(Invoice #${state.invoices[idx].number} marked as Paid);
+  addActivity(`Invoice #${state.invoices[idx].number} marked as Paid`);
   save();
   renderAll();
   toast('Marked as Paid ✅');
@@ -696,11 +696,11 @@ function updateDashboard() {
 
   setText('stat-total-inv', total);
   setText('stat-paid', fmtCurrency(paidAmt));
-  setText('stat-paid-count', ${paid.length} invoice${paid.length !== 1 ? 's' : ''} paid);
+  setText('stat-paid-count', `${paid.length} invoice${paid.length !== 1 ? 's' : ''} paid`);
   setText('stat-pending', fmtCurrency(pendingAmt));
-  setText('stat-pending-count', ${pending.length} invoice${pending.length !== 1 ? 's' : ''} pending);
+  setText('stat-pending-count', `${pending.length} invoice${pending.length !== 1 ? 's' : ''} pending`);
   setText('stat-customers', state.customers.length);
-  setText('stat-products-count', ${state.products.length} product${state.products.length !== 1 ? 's' : ''});
+  setText('stat-products-count', `${state.products.length} product${state.products.length !== 1 ? 's' : ''}`);
 
   // Recent invoices
   const recentEl = document.getElementById('dash-recent-invoices');
@@ -743,10 +743,10 @@ function timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return 'just now';
-  if (mins < 60) return ${mins}m ago;
+  if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return ${hrs}h ago;
-  return ${Math.floor(hrs / 24)}d ago;
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
 }
 
 // ===================== INVOICE PREVIEW =====================
@@ -800,19 +800,19 @@ function previewInvoice(id) {
         <div class="preview-party-label">From</div>
         <div class="preview-party-name">${escHtml(s.name || 'Your Company')}</div>
         <div class="preview-party-info">
-          ${s.gstin ? GSTIN: ${s.gstin}<br> : ''}
+          ${s.gstin ? `GSTIN: ${s.gstin}<br>` : ''}
           ${escHtml(s.address || '')}${s.address ? '<br>' : ''}
-          ${s.phone ? 📞 ${s.phone} : ''} ${s.email ? | ✉️ ${s.email} : ''}
+          ${s.phone ? `📞 ${s.phone}` : ''} ${s.email ? `| ✉️ ${s.email}` : ''}
         </div>
       </div>
       <div>
         <div class="preview-party-label">Bill To</div>
         <div class="preview-party-name">${escHtml(customer.name || inv.customerName || '—')}</div>
         <div class="preview-party-info">
-          ${customer.gstin ? GSTIN: ${customer.gstin}<br> : ''}
+          ${customer.gstin ? `GSTIN: ${customer.gstin}<br>` : ''}
           ${customer.address ? escHtml(customer.address) + '<br>' : ''}
           ${customer.city ? customer.city : ''} ${customer.state ? customer.state : ''}<br>
-          ${customer.phone ? 📞 ${customer.phone} : ''} ${customer.email ? ✉️ ${customer.email} : ''}
+          ${customer.phone ? `📞 ${customer.phone}` : ''} ${customer.email ? `✉️ ${customer.email}` : ''}
         </div>
       </div>
     </div>
@@ -845,14 +845,14 @@ function previewInvoice(id) {
       <div class="preview-totals-box">
         <div class="preview-totals-row"><span>Subtotal</span><span>₹${(inv.subtotal||0).toLocaleString('en-IN',{minimumFractionDigits:2})}</span></div>
         <div class="preview-totals-row"><span>GST</span><span>₹${(inv.gstTotal||0).toLocaleString('en-IN',{minimumFractionDigits:2})}</span></div>
-        ${inv.discount ? <div class="preview-totals-row"><span>Discount</span><span>- ₹${parseFloat(inv.discount).toLocaleString('en-IN',{minimumFractionDigits:2})}</span></div> : ''}
+        ${inv.discount ? `<div class="preview-totals-row"><span>Discount</span><span>- ₹${parseFloat(inv.discount).toLocaleString('en-IN',{minimumFractionDigits:2})}</span></div>` : ''}
         <div class="preview-totals-grand"><span>Total</span><span>₹${(inv.grand||0).toLocaleString('en-IN',{minimumFractionDigits:2})}</span></div>
       </div>
     </div>
 
     ${bankHtml}
 
-    ${inv.notes ? <div class="preview-notes"><strong>Notes:</strong> ${escHtml(inv.notes)}</div> : ''}
+    ${inv.notes ? `<div class="preview-notes"><strong>Notes:</strong> ${escHtml(inv.notes)}</div>` : ''}
 
     <div class="preview-footer">Thank you for your business! • Generated by InvoiceFlow Pro</div>
   `;
